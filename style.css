@@ -1,0 +1,27 @@
+#container {
+    display: flex;
+    width: 90%;
+    margin: auto;
+
+}
+
+#container div {
+    border: 1px solid green;
+    width: 33%;
+    padding: 20px;
+    text-align: center;
+    margin: 0 auto; /* or margin: 0 auto 0 auto */
+    
+   
+
+    
+}
+table {
+    margin: 0 auto; /* or margin: 0 auto 0 auto */
+  }
+
+fieldset {
+    width: 50%;
+    margin:auto;
+    
+}
