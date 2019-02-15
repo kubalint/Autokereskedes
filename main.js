@@ -37,6 +37,7 @@ function WindowLoadHandler(){
 
 
     stockTableParent = document.querySelector("#stockDiv");
+    cartTableParent = document.querySelector("#cartDiv");
     
     //++ Megfigyeljük a mezők alatt lévő gombot ++//
     uploadButton.addEventListener('click',Add_Button_Click_Handler, false);
@@ -86,7 +87,7 @@ function Draw_Stock_Table(){
         col.innerText = k;
         row.appendChild(col);
     }
-    //++ Delete oszlop létrehozása utolsóként ++//
+    //++ Select oszlop létrehozása utolsóként ++//
     var col = document.createElement("th");
     col.innerText = "Select";
     row.appendChild(col);
@@ -112,6 +113,17 @@ function Draw_Stock_Table(){
         
         table.appendChild(row);
     }
+
+    var row = document.createElement("tr");
+    var col = document.createElement("td");
+    col.setAttribute("colspan","6");
+    row.appendChild(col);
+    var col = document.createElement("td");
+    col.innerHTML="<button onclick=\"buyButtonClickHandler()\">Buy</button>";
+    row.appendChild(col);
+    table.appendChild(row);
+
+
     table.setAttribute("border","1");
     table.setAttribute("id","stockTableElement");
 
@@ -119,6 +131,61 @@ function Draw_Stock_Table(){
 
     
 }
+
+function Draw_Cart_Table(){
+    var inputArray= carsInCart;
+    var table = document.createElement("table");
+    var row = document.createElement("tr");
+    for (var k in inputArray[0]){
+        var col = document.createElement("th");
+        col.innerText = k;
+        row.appendChild(col);
+    }
+    //++ Select oszlop létrehozása utolsóként ++//
+    var col = document.createElement("th");
+    col.innerText = "Select";
+    row.appendChild(col);
+    table.appendChild(row);
+
+    
+    for (var i=0 ; i<inputArray.length ; i++){
+        var row = document.createElement("tr");
+        for(var k in inputArray[i])
+        {
+            var col = document.createElement("td");
+            col.innerText = inputArray[i][k];      
+            if (typeof inputArray[i][k] == "number"){
+                col.setAttribute("align","right");
+            }
+            row.appendChild(col);
+        }
+        //++ Soronként utolsó cellaként egy törlés gomb ++//
+        var col = document.createElement("td");
+        col.innerHTML = "<input type=\"checkbox\" class=\"cartCheckbox\">"
+
+        row.appendChild(col);
+        
+        table.appendChild(row);
+    }
+
+    var row = document.createElement("tr");
+    var col = document.createElement("td");
+    col.setAttribute("colspan","6");
+    row.appendChild(col);
+    var col = document.createElement("td");
+    col.innerHTML="<button onclick=\"cartDelButtonClickHandler()\">Del</button>";
+    row.appendChild(col);
+    table.appendChild(row);
+
+
+    table.setAttribute("border","1");
+    table.setAttribute("id","stockTableElement");
+
+    cartTableParent.appendChild(table);
+
+    
+}
+
 
 function delButtonClickHandler(){
     //++ Kijelölt elemek kigyűjtése tömbbe ++//
@@ -145,3 +212,31 @@ function deleteElements(elementArray,idsToDeleteArray){
         StockDivChildList.removeChild(StockDivChildList.childNodes[0]);           
         Draw_Stock_Table();
 }
+
+function buyButtonClickHandler(){
+   
+    //++ Kijelölt elemek kigyűjtése tömbbe ++//
+    var checkedCheckboxes = document.querySelectorAll(".stockCheckbox:checked");
+    var idsToBuy = [];
+    for (var i=0; i<checkedCheckboxes.length; i++){        
+        idsToBuy.push(parseInt(checkedCheckboxes[i].parentNode.parentNode.firstChild.innerText));
+    }
+    
+    buyElements(carsOnStock,idsToBuy);
+}
+
+function buyElements(elementArray,idsToBuyArray){
+
+    for (var buyIdIndex=0; buyIdIndex<idsToBuyArray.length; buyIdIndex++){
+        for  (var elementsIndex=0; elementsIndex<elementArray.length; elementsIndex++){
+            if(idsToBuyArray[buyIdIndex]==elementArray[elementsIndex].ID){
+             carsInCart.push(elementArray[elementsIndex]);
+            }
+        }
+     }
+     
+     var cartDivChildList = document.getElementById("cartDiv");  
+         cartDivChildList.removeChild(cartDivChildList.childNodes[0]);           
+         Draw_Cart_Table();
+}
+
