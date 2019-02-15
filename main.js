@@ -19,6 +19,10 @@ var stockTable = "";
 var carsOnStock = [];
 var carsInCart = [];
 
+var removeButtonList=[];
+
+var carID = 0;
+
 
 //++ Amikor betöltődött az oldal, ez a függvény le fog futni ++//
 function WindowLoadHandler(){
@@ -31,17 +35,18 @@ function WindowLoadHandler(){
     productPicTXT = document.querySelector("#productPic");
     uploadButton = document.querySelector("#btnUpload");
 
+
     stockTableParent = document.querySelector("#stockDiv");
     
     //++ Megfigyeljük a mezők alatt lévő gombot ++//
-    uploadButton.addEventListener('click',Button_Click_Handler, false);
+    uploadButton.addEventListener('click',Add_Button_Click_Handler, false);
 
     //++ Megfigyeljük a raktáron lévő autók tömbjének változását ++//
     //carsOnStock.addEventListener('change',Draw_Stock_Table,false);
 }
 
 //++ A gomb megnyomásakor ezt a függvényt futtatjuk le ++//
-function Button_Click_Handler(){    
+function Add_Button_Click_Handler(){    
 
     //++ Adatok beolvasása a mezőkből ++//
     var currentName = productNameTXT.value;
@@ -59,7 +64,8 @@ function Button_Click_Handler(){
     } else {
     
         //++ Ha minden ki van töltve, készítünk egy új autót a tömbünkbe++//
-        var currentCar = new Car(1,currentName,currentColor,currentHP,currentPrice,currentPic);    
+        carID++;
+        var currentCar = new Car(carID,currentName,currentColor,currentHP,currentPrice,currentPic);    
         carsOnStock.push(currentCar);
 
         //++ Gomb megnyomására a középső div gyerekét törli majd újat csinál neki ++//
@@ -82,7 +88,7 @@ function Draw_Stock_Table(){
     }
     //++ Delete oszlop létrehozása utolsóként ++//
     var col = document.createElement("th");
-    col.innerText = "Delete";
+    col.innerText = "Select";
     row.appendChild(col);
     table.appendChild(row);
 
@@ -100,7 +106,8 @@ function Draw_Stock_Table(){
         }
         //++ Soronként utolsó cellaként egy törlés gomb ++//
         var col = document.createElement("td");
-        col.innerHTML = "<button id=\"stockDelBtn\" style=\"color: red;\">X</button>"
+        col.innerHTML = "<input type=\"checkbox\" class=\"stockCheckbox\">"
+
         row.appendChild(col);
         
         table.appendChild(row);
@@ -109,6 +116,32 @@ function Draw_Stock_Table(){
     table.setAttribute("id","stockTableElement");
 
     stockTableParent.appendChild(table);
+
+    
 }
 
+function delButtonClickHandler(){
+    //++ Kijelölt elemek kigyűjtése tömbbe ++//
+    var checkedCheckboxes = document.querySelectorAll(".stockCheckbox:checked");
+    var idsToDelete = [];
+    for (var i=0; i<checkedCheckboxes.length; i++){        
+        idsToDelete.push(parseInt(checkedCheckboxes[i].parentNode.parentNode.firstChild.innerText));
+    }
+    console.log(idsToDelete);
+    deleteElements(carsOnStock,idsToDelete);
+}
 
+function deleteElements(elementArray,idsToDeleteArray){
+    
+    for (var delIdIndex=0; delIdIndex<idsToDeleteArray.length; delIdIndex++){
+       for  (var elementsIndex=0; elementsIndex<elementArray.length; elementsIndex++){
+           if(idsToDeleteArray[delIdIndex]==elementArray[elementsIndex].ID){
+            elementArray.splice(elementsIndex, 1);
+           }
+       }
+    }
+    
+    var StockDivChildList = document.getElementById("stockDiv");  
+        StockDivChildList.removeChild(StockDivChildList.childNodes[0]);           
+        Draw_Stock_Table();
+}
