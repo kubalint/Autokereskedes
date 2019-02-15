@@ -153,7 +153,11 @@ function Draw_Cart_Table(){
         for(var k in inputArray[i])
         {
             var col = document.createElement("td");
-            col.innerText = inputArray[i][k];      
+          if ( k =="ID"){
+            col.innerText = i;
+          } else {
+            col.innerText = inputArray[i][k];   
+          }
             if (typeof inputArray[i][k] == "number"){
                 col.setAttribute("align","right");
             }
@@ -231,12 +235,53 @@ function buyElements(elementArray,idsToBuyArray){
         for  (var elementsIndex=0; elementsIndex<elementArray.length; elementsIndex++){
             if(idsToBuyArray[buyIdIndex]==elementArray[elementsIndex].ID){
              carsInCart.push(elementArray[elementsIndex]);
+             
             }
         }
      }
-     
+/*
+     for (var i=0 ; i<carsInCart.length ; i++){
+         carsInCart[i].ID = i+1;
+     }
+*/     
      var cartDivChildList = document.getElementById("cartDiv");  
          cartDivChildList.removeChild(cartDivChildList.childNodes[0]);           
          Draw_Cart_Table();
 }
 
+function cartDelButtonClickHandler(){
+     //++ Kijelölt elemek kigyűjtése tömbbe ++//
+     var checkedCheckboxes = document.querySelectorAll(".cartCheckbox:checked");
+     var indexesToDelete = [];
+     for (var i=0; i<checkedCheckboxes.length; i++){        
+         indexesToDelete.push(parseInt(checkedCheckboxes[i].parentNode.parentNode.firstChild.innerText));
+     }
+     console.log(indexesToDelete);
+     deleteCartElements(carsInCart,indexesToDelete);
+}
+
+function deleteCartElements(elementArray,indexesToDeleteArray){
+    
+    var tempArray=[];
+
+    
+    var notToCopy = 0;
+
+        for (var i=0; i<elementArray.length; i++){
+            if (i == indexesToDeleteArray[notToCopy]){
+                notToCopy++;
+            } else {
+            tempArray.push(elementArray[i]);
+            }
+        }
+
+    console.log(tempArray);
+
+    carsInCart=tempArray;
+
+
+   
+    var cartDivChildList = document.getElementById("cartDiv");  
+        cartDivChildList.removeChild(cartDivChildList.childNodes[0]);           
+        Draw_Cart_Table();
+}
