@@ -1,13 +1,20 @@
 #container {
-    display: flex;
-    width: 90%;
-    margin: auto;
+    
+    /*display: grid; */
+    /*grid-template-columns: 33% 33% 33%;*/    
 
+    display: flex; 
+    width: 90%; 
+
+    margin: auto;
+    
 }
 
 #container div {
-    border: 1px solid green;
-    width: 33%;
+
+    width: 33%; 
+    border: 1px solid green; 
+   
     padding: 20px;
     text-align: center;
     margin: 0 auto; /* or margin: 0 auto 0 auto */
@@ -16,6 +23,13 @@
 
     
 }
+
+/*
+#container div:nth-child(3n){
+    line-break: after; 
+  }
+*/
+
 table {
     margin: 0 auto; /* or margin: 0 auto 0 auto */
   }

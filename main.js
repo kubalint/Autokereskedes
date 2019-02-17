@@ -22,6 +22,7 @@ var carsInCart = [];
 
 
 var carID = 0;
+var alreadyUploaded=false;
 
 
 //++ Amikor betöltődött az oldal, ez a függvény le fog futni ++//
@@ -52,8 +53,8 @@ function Add_Button_Click_Handler(){
     //++ Adatok beolvasása a mezőkből ++//
     var currentName = productNameTXT.value;
     var currentColor = productColorTXT.value;
-    var currentHP = productHPTXT.value;
-    var currentPrice = productPriceTXT.value;
+    var currentHP = parseInt(productHPTXT.value);
+    var currentPrice = parseInt(productPriceTXT.value);
     var currentPic = productPicTXT.value;
 
     stockTable = document.querySelector("#stockTableElement");
@@ -73,6 +74,12 @@ function Add_Button_Click_Handler(){
         var StockDivChildList = document.getElementById("stockDiv");  
         StockDivChildList.removeChild(StockDivChildList.childNodes[0]);           
         Draw_Stock_Table();
+
+        productNameTXT.value = "";
+        productColorTXT.value = "";
+        productHPTXT.value = "";
+        productPriceTXT.value = "";
+        productPicTXT.value = "";
     }
 
     
@@ -141,8 +148,14 @@ function Draw_Stock_Table(){
 function Draw_Cart_Table(){
     var inputArray= carsInCart;
     var table = document.createElement("table");
+    var fullPrice = 0;
 
     if (inputArray.length != 0){
+
+        //++ Kosárban lévő termékek összértékének kiszámítása ++//
+        for (var i=0 ; i<inputArray.length ; i++){
+            fullPrice += inputArray[i].Price;
+        }
         
         var row = document.createElement("tr");
         for (var k in inputArray[0]){
@@ -177,7 +190,7 @@ function Draw_Cart_Table(){
                 row.appendChild(col);
             }
 
-            //++ Soronként utolsó cellaként egy törlés gomb ++//       
+            //++ Soronként utolsó cellaként egy checkbox ++//       
         
                 var col = document.createElement("td");
                 col.innerHTML = "<input type=\"checkbox\" class=\"cartCheckbox\">";     
@@ -187,9 +200,14 @@ function Draw_Cart_Table(){
             table.appendChild(row);
         }
 
+
+        //++ Lábléc létrehozása vásárlás és törlés gombbal++//
         var row = document.createElement("tr");
         var col = document.createElement("td");
         col.setAttribute("colspan","6");
+        col.innerHTML="<button onclick=\"sendOrderButtonClickHandler()\">Checkout: " + fullPrice + "Ft </button>";
+        col.setAttribute("align","right");
+        col.firstChild.setAttribute("style","background-color: #42f44b; color: white");
         row.appendChild(col);
         var col = document.createElement("td");
         col.innerHTML="<button onclick=\"cartDelButtonClickHandler()\">Del</button>";
@@ -302,4 +320,108 @@ function deleteCartElements(elementArray,indexesToDeleteArray){
     var cartDivChildList = document.getElementById("cartDiv");  
         cartDivChildList.removeChild(cartDivChildList.childNodes[0]);           
         Draw_Cart_Table();
+}
+
+function uploadStockDB() {
+  if (alreadyUploaded){
+      alert("Már feltöltötted az adatbázist.");
+  }  else {
+        alreadyUploaded=true;
+        var savedStockDatabase = 
+        [
+            {
+                "ID" : "",
+                "Name" : "Seat Cordoba",
+                "Color" : "sárga",
+                "HorsePower" : 110,
+                "Price" : 500000,
+                "Picture" : "seat.jpg",
+            },
+
+            {
+            "ID" : "",
+            "Name" : "Opel Omega",
+            "Color" : "szürke",
+            "HorsePower" : 150,
+            "Price" : 300000,
+            "Picture" : "opel.jpg",
+            },      
+            
+            {
+                "ID" : "",
+                "Name" : "Suzuki Vitara",
+                "Color" : "piros",
+                "HorsePower" : 90,
+                "Price" : 3000000,
+                "Picture" : "vitara.jpg",
+            },
+
+            {
+            "ID" : "",
+            "Name" : "Toyota Supra",
+            "Color" : "piros",
+            "HorsePower" : 190,
+            "Price" : 500000,
+            "Picture" : "supra.jpg",
+            },      
+            
+            {
+                "ID" : "",
+                "Name" : "Volvo V40",
+                "Color" : "fekete",
+                "HorsePower" : 220,
+                "Price" : 1200000,
+                "Picture" : "v40.jpg",
+            },
+
+            {
+            "ID" : "",
+            "Name" : "Audi S8",
+            "Color" : "fekete",
+            "HorsePower" : 550,
+            "Price" : 50000000,
+            "Picture" : "s8.jpg",
+            },      
+            
+            {
+                "ID" : "",
+                "Name" : "Mercedes SLS AMG",
+                "Color" : "ezüst",
+                "HorsePower" : 700,
+                "Price" : 60000000,
+                "Picture" : "slsamg.jpg",
+            },
+
+            {
+            "ID" : "",
+            "Name" : "Trabant 601",
+            "Color" : "fehér",
+            "HorsePower" : 28,
+            "Price" : 15000,
+            "Picture" : "trabi.jpg",
+            },
+
+        ];
+
+        for (var i=0; i<savedStockDatabase.length; i++){
+            carID++;
+            var currentCar = new Car(carID,savedStockDatabase[i].Name,savedStockDatabase[i].Color,savedStockDatabase[i].HorsePower,savedStockDatabase[i].Price,savedStockDatabase[i].Picture);    
+            carsOnStock.push(currentCar);
+        }
+        
+
+        //++ Gomb megnyomására a középső div gyerekét törli majd újat csinál neki ++//
+        var StockDivChildList = document.getElementById("stockDiv");  
+        StockDivChildList.removeChild(StockDivChildList.childNodes[0]);           
+        Draw_Stock_Table();
+    }
+  
+
+}
+
+function sendOrderButtonClickHandler(){
+    var orderJson = JSON.stringify(carsInCart);
+    var paragraphJson = document.createElement("p");
+    paragraphJson.innerText = orderJson;
+    document.body.appendChild(paragraphJson);
 }
