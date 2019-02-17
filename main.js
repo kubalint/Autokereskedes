@@ -110,7 +110,13 @@ function Draw_Stock_Table(){
             for(var k in inputArray[i])
             {
                 var col = document.createElement("td");
-                col.innerText = inputArray[i][k];      
+
+                if (k=="Picture"){
+                    col.innerHTML ="<a href=\"" + inputArray[i][k] +"\" target=\"_blank\"><button>View</button></a>";   
+                } else {
+                    col.innerText = inputArray[i][k];      
+                }
+
                 if (typeof inputArray[i][k] == "number"){
                     col.setAttribute("align","right");
                 }
@@ -181,9 +187,12 @@ function Draw_Cart_Table(){
                 var col = document.createElement("td");
             if ( k =="ID"){
                 col.innerText = i+1;
+            } else if(k=="Picture") {
+                col.innerHTML ="<a href=\"" + inputArray[i][k] +"\" target=\"_blank\"><button>View</button></a>";   
             } else {
                 col.innerText = inputArray[i][k];   
             }
+
                 if (typeof inputArray[i][k] == "number"){
                     col.setAttribute("align","right");
                 }
@@ -335,7 +344,7 @@ function uploadStockDB() {
                 "Color" : "sárga",
                 "HorsePower" : 110,
                 "Price" : 500000,
-                "Picture" : "seat.jpg",
+                "Picture" : "https://www.automaniac.org/resources/images/variant/551/cordoba_3.jpg",
             },
 
             {
@@ -344,7 +353,7 @@ function uploadStockDB() {
             "Color" : "szürke",
             "HorsePower" : 150,
             "Price" : 300000,
-            "Picture" : "opel.jpg",
+            "Picture" : "https://www.autonavigator.hu/wp-content/uploads/2016/02/5618_orig.jpg",
             },      
             
             {
@@ -353,7 +362,7 @@ function uploadStockDB() {
                 "Color" : "piros",
                 "HorsePower" : 90,
                 "Price" : 3000000,
-                "Picture" : "vitara.jpg",
+                "Picture" : "https://auto.suzuki.hu/vitara/assets/img/pic-exterior1.jpg",
             },
 
             {
@@ -362,7 +371,7 @@ function uploadStockDB() {
             "Color" : "piros",
             "HorsePower" : 190,
             "Price" : 500000,
-            "Picture" : "supra.jpg",
+            "Picture" : "http://www.autosspeed.com/wp-content/uploads/2017/09/supra-1.jpg",
             },      
             
             {
@@ -371,7 +380,7 @@ function uploadStockDB() {
                 "Color" : "fekete",
                 "HorsePower" : 220,
                 "Price" : 1200000,
-                "Picture" : "v40.jpg",
+                "Picture" : "https://www.caranddriving.com/images/new/large/VolvoV40D20516.jpg",
             },
 
             {
@@ -380,7 +389,7 @@ function uploadStockDB() {
             "Color" : "fekete",
             "HorsePower" : 550,
             "Price" : 50000000,
-            "Picture" : "s8.jpg",
+            "Picture" : "https://www.autoscout24.hu/assets/auto/images/model/audi/audi-s8/audi-s8-l-01.jpg",
             },      
             
             {
@@ -389,7 +398,7 @@ function uploadStockDB() {
                 "Color" : "ezüst",
                 "HorsePower" : 700,
                 "Price" : 60000000,
-                "Picture" : "slsamg.jpg",
+                "Picture" : "https://img.automobile.de/modellbilder/Mercedes-Benz-SLS-AMG-40541_inden_mer_17_sls_1.jpg",
             },
 
             {
@@ -398,7 +407,7 @@ function uploadStockDB() {
             "Color" : "fehér",
             "HorsePower" : 28,
             "Price" : 15000,
-            "Picture" : "trabi.jpg",
+            "Picture" : "https://www.autonavigator.hu/wp-content/uploads/2011/01/4859_orig.jpg",
             },
 
         ];
