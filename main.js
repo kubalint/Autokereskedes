@@ -19,7 +19,7 @@ var stockTable = "";
 var carsOnStock = [];
 var carsInCart = [];
 
-var removeButtonList=[];
+
 
 var carID = 0;
 
@@ -60,8 +60,8 @@ function Add_Button_Click_Handler(){
 
 
     //++ Mezők validálása ++//    
-    if(currentName=="" || currentColor=="" || currentHP=="" || currentPrice=="" || currentPic==""){
-        alert("Tölts ki minden mezőt!");
+    if(currentName=="" || currentColor=="" || currentHP=="" || currentPrice=="" || currentPic=="" || isNaN(parseInt(currentHP)) || isNaN(parseInt(currentPrice))) {
+        alert("Tölts ki helyesen minden mezőt!");
     } else {
     
         //++ Ha minden ki van töltve, készítünk egy új autót a tömbünkbe++//
@@ -81,53 +81,59 @@ function Add_Button_Click_Handler(){
 function Draw_Stock_Table(){
     var inputArray= carsOnStock;
     var table = document.createElement("table");
-    var row = document.createElement("tr");
-    for (var k in inputArray[0]){
-        var col = document.createElement("th");
-        col.innerText = k;
-        row.appendChild(col);
-    }
-    //++ Select oszlop létrehozása utolsóként ++//
-    var col = document.createElement("th");
-    col.innerText = "Select";
-    row.appendChild(col);
-    table.appendChild(row);
 
-    
-    for (var i=0 ; i<inputArray.length ; i++){
+    if (inputArray.length != 0){
+
+       
         var row = document.createElement("tr");
-        for(var k in inputArray[i])
-        {
-            var col = document.createElement("td");
-            col.innerText = inputArray[i][k];      
-            if (typeof inputArray[i][k] == "number"){
-                col.setAttribute("align","right");
-            }
+        for (var k in inputArray[0]){
+            var col = document.createElement("th");
+            col.innerText = k;
             row.appendChild(col);
         }
-        //++ Soronként utolsó cellaként egy törlés gomb ++//
-        var col = document.createElement("td");
-        col.innerHTML = "<input type=\"checkbox\" class=\"stockCheckbox\">"
-
+        //++ Select oszlop létrehozása utolsóként ++//
+        var col = document.createElement("th");
+        col.innerText = "Select";
         row.appendChild(col);
-        
         table.appendChild(row);
+
+        
+        for (var i=0 ; i<inputArray.length ; i++){
+            var row = document.createElement("tr");
+            for(var k in inputArray[i])
+            {
+                var col = document.createElement("td");
+                col.innerText = inputArray[i][k];      
+                if (typeof inputArray[i][k] == "number"){
+                    col.setAttribute("align","right");
+                }
+                row.appendChild(col);
+            }
+            //++ Soronként utolsó cellaként egy törlés gomb ++//            
+                var col = document.createElement("td");
+                col.innerHTML = "<input type=\"checkbox\" class=\"stockCheckbox\">";
+            
+                row.appendChild(col);       
+            
+            table.appendChild(row);
+        }
+
+        var row = document.createElement("tr");
+        var col = document.createElement("td");
+        col.setAttribute("colspan","6");
+        row.appendChild(col);
+        var col = document.createElement("td");
+        col.innerHTML="<button onclick=\"buyButtonClickHandler()\">Buy</button>";
+        row.appendChild(col);
+        table.appendChild(row);
+
+
+        table.setAttribute("border","1");
+        table.setAttribute("id","stockTableElement");
     }
 
-    var row = document.createElement("tr");
-    var col = document.createElement("td");
-    col.setAttribute("colspan","6");
-    row.appendChild(col);
-    var col = document.createElement("td");
-    col.innerHTML="<button onclick=\"buyButtonClickHandler()\">Buy</button>";
-    row.appendChild(col);
-    table.appendChild(row);
-
-
-    table.setAttribute("border","1");
-    table.setAttribute("id","stockTableElement");
-
     stockTableParent.appendChild(table);
+    
 
     
 }
@@ -135,59 +141,70 @@ function Draw_Stock_Table(){
 function Draw_Cart_Table(){
     var inputArray= carsInCart;
     var table = document.createElement("table");
-    var row = document.createElement("tr");
-    for (var k in inputArray[0]){
-        var col = document.createElement("th");
-        col.innerText = k;
-        row.appendChild(col);
-    }
-    //++ Select oszlop létrehozása utolsóként ++//
-    var col = document.createElement("th");
-    col.innerText = "Select";
-    row.appendChild(col);
-    table.appendChild(row);
 
-    
-    for (var i=0 ; i<inputArray.length ; i++){
+    if (inputArray.length != 0){
+        
         var row = document.createElement("tr");
-        for(var k in inputArray[i])
-        {
-            var col = document.createElement("td");
-          if ( k =="ID"){
-            col.innerText = i;
-          } else {
-            col.innerText = inputArray[i][k];   
-          }
-            if (typeof inputArray[i][k] == "number"){
-                col.setAttribute("align","right");
-            }
+        for (var k in inputArray[0]){
+            var col = document.createElement("th");
+                if (k=="ID"){
+                    col.innerText="Order ID";
+                }else {
+                col.innerText = k;
+                }
             row.appendChild(col);
         }
-        //++ Soronként utolsó cellaként egy törlés gomb ++//
-        var col = document.createElement("td");
-        col.innerHTML = "<input type=\"checkbox\" class=\"cartCheckbox\">"
-
+        //++ Select oszlop létrehozása utolsóként ++//
+        var col = document.createElement("th");
+        col.innerText = "Select";
         row.appendChild(col);
-        
         table.appendChild(row);
+
+        
+        for (var i=0 ; i<inputArray.length ; i++){
+            var row = document.createElement("tr");
+            for(var k in inputArray[i])
+            {
+                var col = document.createElement("td");
+            if ( k =="ID"){
+                col.innerText = i+1;
+            } else {
+                col.innerText = inputArray[i][k];   
+            }
+                if (typeof inputArray[i][k] == "number"){
+                    col.setAttribute("align","right");
+                }
+                row.appendChild(col);
+            }
+
+            //++ Soronként utolsó cellaként egy törlés gomb ++//       
+        
+                var col = document.createElement("td");
+                col.innerHTML = "<input type=\"checkbox\" class=\"cartCheckbox\">";     
+
+                row.appendChild(col);             
+            
+            table.appendChild(row);
+        }
+
+        var row = document.createElement("tr");
+        var col = document.createElement("td");
+        col.setAttribute("colspan","6");
+        row.appendChild(col);
+        var col = document.createElement("td");
+        col.innerHTML="<button onclick=\"cartDelButtonClickHandler()\">Del</button>";
+        row.appendChild(col);
+        table.appendChild(row);
+
+
+        table.setAttribute("border","1");
+        table.setAttribute("id","stockTableElement");
     }
-
-    var row = document.createElement("tr");
-    var col = document.createElement("td");
-    col.setAttribute("colspan","6");
-    row.appendChild(col);
-    var col = document.createElement("td");
-    col.innerHTML="<button onclick=\"cartDelButtonClickHandler()\">Del</button>";
-    row.appendChild(col);
-    table.appendChild(row);
-
-
-    table.setAttribute("border","1");
-    table.setAttribute("id","stockTableElement");
 
     cartTableParent.appendChild(table);
 
     
+        
 }
 
 
@@ -223,6 +240,7 @@ function buyButtonClickHandler(){
     var checkedCheckboxes = document.querySelectorAll(".stockCheckbox:checked");
     var idsToBuy = [];
     for (var i=0; i<checkedCheckboxes.length; i++){        
+        checkedCheckboxes[i].checked = false;
         idsToBuy.push(parseInt(checkedCheckboxes[i].parentNode.parentNode.firstChild.innerText));
     }
     
@@ -268,7 +286,7 @@ function deleteCartElements(elementArray,indexesToDeleteArray){
     var notToCopy = 0;
 
         for (var i=0; i<elementArray.length; i++){
-            if (i == indexesToDeleteArray[notToCopy]){
+            if (i == (indexesToDeleteArray[notToCopy]-1)){
                 notToCopy++;
             } else {
             tempArray.push(elementArray[i]);
