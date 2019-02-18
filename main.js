@@ -94,13 +94,13 @@ function Draw_Stock_Table(){
        
         var row = document.createElement("tr");
         for (var k in inputArray[0]){
-            var col = document.createElement("th");
-            col.innerText = k;
+            var col = document.createElement("th");            
+            col.innerHTML = "<a onclick=\"sortByColumn('"+k+"','stock')\">"+k+"</a>";
             row.appendChild(col);
         }
         //++ Select oszlop létrehozása utolsóként ++//
         var col = document.createElement("th");
-        col.innerText = "Select";
+        col.innerHTML = "<a onclick=\"selectAll('stock')\">Select</a>";
         row.appendChild(col);
         table.appendChild(row);
 
@@ -167,15 +167,15 @@ function Draw_Cart_Table(){
         for (var k in inputArray[0]){
             var col = document.createElement("th");
                 if (k=="ID"){
-                    col.innerText="Order ID";
+                    col.innerHTML = "<a onclick=\"sortByColumn('originalIndex','cart')\">Order ID</a>";
                 }else {
-                col.innerText = k;
+                    col.innerHTML = "<a onclick=\"sortByColumn('"+k+"','cart')\">"+k+"</a>";
                 }
             row.appendChild(col);
         }
         //++ Select oszlop létrehozása utolsóként ++//
         var col = document.createElement("th");
-        col.innerText = "Select";
+        col.innerHTML = "<a onclick=\"selectAll('cart')\">Select</a>";
         row.appendChild(col);
         table.appendChild(row);
 
@@ -433,4 +433,43 @@ function sendOrderButtonClickHandler(){
     var paragraphJson = document.createElement("p");
     paragraphJson.innerText = orderJson;
     document.body.appendChild(paragraphJson);
+}
+
+function sortByColumn(miAlapjan,hol){
+    alert(miAlapjan+" "+hol);
+
+    if (hol=="stock"){
+        var tempArray=carsOnStock;
+    }else{
+        var tempArray=carsInCart;
+    }
+
+
+}
+
+function selectAll(hol){
+    
+    if (hol=="stock"){
+        var chckBoxes = document.querySelectorAll(".stockCheckbox");
+    }else {
+        var chckBoxes = document.querySelectorAll(".cartCheckbox");
+    }
+
+    var mindenKiVanJelolve = true;
+    for (var i=0; i<chckBoxes.length;i++){
+        if (!chckBoxes[i].checked){
+            mindenKiVanJelolve=false;
+            break;
+        }
+    }
+
+    if(mindenKiVanJelolve){
+        for (var i=0; i<chckBoxes.length;i++){
+            chckBoxes[i].checked=false;
+        }
+    }else {
+        for (var i=0; i<chckBoxes.length;i++){
+            chckBoxes[i].checked=true;
+        }
+    }
 }
