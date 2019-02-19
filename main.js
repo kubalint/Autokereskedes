@@ -18,6 +18,9 @@ var stockTable = "";
 //++ Ezekben a tömbökben tároljuk az autókat. Egyelőre üresek ++//
 var carsOnStock = [];
 var carsInCart = [];
+
+//++ A táblázatok rendezettségének aktuális állapotát tároló tömb. csokkeno vagy novekvo ++//
+//++ A sortByColumn függvény használja. Ha csokkeno, akkor novekvobe rendez és fordítva ++//
 var rendezesAllapota=
 [
     {
@@ -38,8 +41,10 @@ var rendezesAllapota=
 ];
 
 
-
+//++ A raktáron lévő kocsik ID-ja. Új elem hozzáadásánál növekszik ++//
 var carID = 0;
+
+//++ Annak az eldöntésére, hogy használtuk-e már a Raktárkészlet beolvasása featuret ++//
 var alreadyUploaded=false;
 
 
