@@ -18,11 +18,30 @@ var stockTable = "";
 //++ Ezekben a tömbökben tároljuk az autókat. Egyelőre üresek ++//
 var carsOnStock = [];
 var carsInCart = [];
+var rendezesAllapota=
+[
+    {
+        ID:"",
+        Name:"",
+        Color:"",
+        HorsePower:"",
+        Price:"",
+    },
+
+    {
+        originalIndex:"",
+        Name:"",
+        Color:"",
+        HorsePower:"",
+        Price:"",
+    },
+];
 
 
 
 var carID = 0;
 var alreadyUploaded=false;
+
 
 
 //++ Amikor betöltődött az oldal, ez a függvény le fog futni ++//
@@ -94,8 +113,12 @@ function Draw_Stock_Table(){
        
         var row = document.createElement("tr");
         for (var k in inputArray[0]){
-            var col = document.createElement("th");            
+            var col = document.createElement("th");       
+            if(k=="Picture"){
+                col.innerText="Picture";
+            } else {    
             col.innerHTML = "<a onclick=\"sortByColumn('"+k+"','stock')\">"+k+"</a>";
+            }
             row.appendChild(col);
         }
         //++ Select oszlop létrehozása utolsóként ++//
@@ -167,8 +190,10 @@ function Draw_Cart_Table(){
         for (var k in inputArray[0]){
             var col = document.createElement("th");
                 if (k=="ID"){
-                    col.innerHTML = "<a onclick=\"sortByColumn('originalIndex','cart')\">Order ID</a>";
-                }else {
+                    col.innerText="Order";
+                } else if(k=="Picture") {
+                    col.innerText="Picture";
+                } else {               
                     col.innerHTML = "<a onclick=\"sortByColumn('"+k+"','cart')\">"+k+"</a>";
                 }
             row.appendChild(col);
@@ -436,15 +461,51 @@ function sendOrderButtonClickHandler(){
 }
 
 function sortByColumn(miAlapjan,hol){
-    alert(miAlapjan+" "+hol);
+  
+    var tempArray = [];
+    var rendezesAllapotaIndex=0;
+    var rendezo=0;
 
     if (hol=="stock"){
         var tempArray=carsOnStock;
+        rendezesAllapotaIndex=0;
     }else{
         var tempArray=carsInCart;
+        rendezesAllapotaIndex=1;
     }
 
+    if(rendezesAllapota[rendezesAllapotaIndex][miAlapjan]=="csokkeno"){
+        rendezesAllapota[rendezesAllapotaIndex][miAlapjan]="novekvo";
+        rendezo=-1;
+    } else {
+        rendezesAllapota[rendezesAllapotaIndex][miAlapjan]="csokkeno";
+        rendezo=1;
+    } 
 
+
+    tempArray.sort(function(first,second){
+        if (first[miAlapjan] < second[miAlapjan]){
+            return rendezo;
+        } else {
+            return -rendezo;
+        }
+    });
+
+    if (hol=="stock"){
+        carsOnStock=tempArray;
+
+        var StockDivChildList = document.getElementById("stockDiv");  
+        StockDivChildList.removeChild(StockDivChildList.childNodes[0]);           
+        Draw_Stock_Table();
+      
+    } else {
+        carsInCart=tempArray;
+
+        var cartDivChildList = document.getElementById("cartDiv");  
+        cartDivChildList.removeChild(cartDivChildList.childNodes[0]);           
+        Draw_Cart_Table();
+    }
+    
 }
 
 function selectAll(hol){
