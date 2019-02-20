@@ -58,6 +58,37 @@
           
         </div>
     </div>
+    <div id="filterDiv">
+        <label for="filterName">Név mezőre szűrés</label><br>
+        <input type="text" name="" id="filterName"><br>
+
+        <label for="filterColor">Szín mezőre szűrés</label><br>
+        <input type="text" name="" id="filterColor"><br>
+
+        <label for="filterGrtHP">Lóerő - nagyobb, mint: </label><br>
+        <input type="number" name="" id="filterGrtHP"><br>
+
+        <label for="filterLsstHp">Lóerő - kevesebb, mint: </label><br>
+        <input type="number" name="" id="filterLsstHP"><br>
+
+        <label for="filterGrtPrice">Drágább, mint: </label><br>
+        <input type="number" name="" id="filterGrtPrice"><br>
+
+        <label for="filterLsstPrice">Olcsóbb, mint: </label><br>
+        <input type="number" name="" id="filterLsstPrice"><br>
+        <br>
+        <label for="">Szűrés sorrendje</label><br>
+        <input type="number" name="filterPriority" placeholder="Name" id="priName">
+        <input type="number" name="filterPriority" placeholder="Color" id="priColor"><br>
+        <input type="number" name="filterPriority" placeholder="HP" id="priHP">
+        <input type="number" name="filterPriority" placeholder="Price" id="priPrice"><br>
+        
+        <button onclick="validateFilterInputs()">Send</button>
+
+        <input type="hidden" id="defineTableLocation" name="defineTableLocation" value="">
+
+        
+    </div>
     <script src="car.js" type="text/javascript"></script>
     <script src="main.js" type="text/javascript"></script>
 
