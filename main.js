@@ -1,3 +1,4 @@
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! a táblázatok frissítése már univerzális. a szűrt táblára meg kell csinálni a rendezést
 'use strict';
 //++ Oldal betöltésének megfigyelése ++//
 window.addEventListener('load', WindowLoadHandler, false);
@@ -189,6 +190,14 @@ function Draw_Stock_Table(filtered){
         searchBtn.innerText="Search";
         searchBtn.setAttribute("style","margin: 10px;");
         document.querySelector("#stockDiv").appendChild(searchBtn);
+
+        if (filtered){
+            var restoreBtn=document.createElement('button');
+            restoreBtn.setAttribute("onClick",'restoreTable("stock")');
+            restoreBtn.innerText="Restore";
+            restoreBtn.setAttribute("style","margin: 10px;");
+            document.querySelector("#stockDiv").appendChild(restoreBtn);
+        }
     }
 
     
@@ -292,6 +301,14 @@ function Draw_Cart_Table(filtered){
         searchBtn.innerText="Search";
         searchBtn.setAttribute("style","margin: 10px;");
         document.querySelector("#cartDiv").appendChild(searchBtn);
+
+        if (filtered){
+            var restoreBtn=document.createElement('button');
+            restoreBtn.setAttribute("onClick",'restoreTable("cart")');
+            restoreBtn.innerText="Restore";
+            restoreBtn.setAttribute("style","margin: 10px;");
+            document.querySelector("#cartDiv").appendChild(restoreBtn);
+        }
     }
 
     
@@ -627,10 +644,10 @@ function filter(hol,filterName,filterColor,filterGrtHP,filterLsstHP,filterGrtPri
 
 
     var filteredArray = tempArray.filter(function (el) {
-        return el.HorsePower >=filterGrtHP &&
-            el.HorsePower <=filterLsstHP &&
-            el.Price >= filterGrtPrice &&
-            el.Price <= filterLsstPrice;
+        return el.HorsePower >filterGrtHP &&
+            el.HorsePower <filterLsstHP &&
+            el.Price > filterGrtPrice &&
+            el.Price < filterLsstPrice;
     });
 
     if (filterName!=""){
@@ -655,23 +672,12 @@ function filter(hol,filterName,filterColor,filterGrtHP,filterLsstHP,filterGrtPri
 
     console.log(filteredArray);
     if (hol=="stock"){
-        filteredCarsOnStock=filteredArray;  
-        var StockDivChildList = document.getElementById("stockDiv");  
-        
-        while (StockDivChildList.childElementCount>0){
-            StockDivChildList.removeChild(StockDivChildList.childNodes[0]);   
-        } 
-        Draw_Stock_Table(true);     
+        filteredCarsOnStock=filteredArray;         
     }else{
-        filteredCarsInCart=filteredArray; 
-        var cartDivChildList = document.getElementById("cartDiv");  
-        
-        while (cartDivChildList.childElementCount>0){
-            cartDivChildList.removeChild(cartDivChildList.childNodes[0]);   
-        } 
-        Draw_Cart_Table(true);
+        filteredCarsInCart=filteredArray;       
     }
 
+    refreshTable(hol);
 
 }
 
@@ -683,6 +689,36 @@ function search(hol){
 }
 
 function refreshTable(mit){
+
+    if (mit=="stock"){
+        var StockDivChildList = document.getElementById("stockDiv");  
+        
+        while (StockDivChildList.childElementCount>0){
+            StockDivChildList.removeChild(StockDivChildList.childNodes[0]);   
+        }
+
+        if(filteredCarsOnStock.length>0){
+            Draw_Stock_Table(true);
+        } else {
+            Draw_Stock_Table();
+        }     
+
+    }else{
+        var cartDivChildList = document.getElementById("cartDiv");  
+        
+        while (cartDivChildList.childElementCount>0){
+            cartDivChildList.removeChild(cartDivChildList.childNodes[0]);   
+        }
+
+        if(filteredCarsInCart.length>0){
+            Draw_Cart_Table(true);
+        } else {
+            Draw_Cart_Table();
+        }      
+    }
+
+/*
+
     if(mit=="stock"){
         var StockDivChildList = document.getElementById("stockDiv");  
         
@@ -702,4 +738,6 @@ function refreshTable(mit){
         Draw_Cart_Table();
 
     }
-    }
+    */
+    
+}
