@@ -622,7 +622,7 @@ function selectAll(hol){
 
 
 function filterClickHandler(hol){
-    alert("szűrés a "+hol+"-ban");
+    
     var drawFilter=filterForm;
     drawFilter.setAttribute("style","display: block;");
 
