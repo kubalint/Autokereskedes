@@ -13,6 +13,7 @@ var uploadButton = "";
 
 var stockTableParent = "";
 var cartTableParent = "";
+var filterForm = "";
 
 var stockTable = "";
 
@@ -68,6 +69,9 @@ var alreadyUploaded=false;
 
 //++ Amikor betöltődött az oldal, ez a függvény le fog futni ++//
 function WindowLoadHandler(){
+
+    filterForm = document.querySelector("#filterDiv");
+   // filterForm.setAttribute("style","display: none;");
 
     //++ Változóba mentjük az import mezőket ++//
     productNameTXT = document.querySelector("#productName");
@@ -125,6 +129,9 @@ function Draw_Stock_Table(filtered){
     //++ A kirajzoláshoz áttöltjük az "adatbázist" egy helyi változóba ++//
     if (filtered){
         var inputArray= filteredCarsOnStock;
+        var filteredIndicator=document.createElement("h4");
+        filteredIndicator.innerText="Filtered";
+        stockTableParent.appendChild(filteredIndicator);
     } else {
         var inputArray= carsOnStock;
     }
@@ -200,11 +207,6 @@ function Draw_Stock_Table(filtered){
         filterBtn.setAttribute("style","margin: 10px;");
         document.querySelector("#stockDiv").appendChild(filterBtn);
         
-        var searchBtn=document.createElement('button');
-        searchBtn.setAttribute("onClick",'searchClickHandler("stock")');
-        searchBtn.innerText="Search";
-        searchBtn.setAttribute("style","margin: 10px;");
-        document.querySelector("#stockDiv").appendChild(searchBtn);
 
         if (filtered){
             var restoreBtn=document.createElement('button');
@@ -224,6 +226,9 @@ function Draw_Cart_Table(filtered){
 
     if (filtered){
         var inputArray= filteredCarsInCart;
+        var filteredIndicator=document.createElement("h4");
+        filteredIndicator.innerText="Filtered";
+        cartTableParent.appendChild(filteredIndicator);
     } else {
         var inputArray= carsInCart;
     }
@@ -311,11 +316,6 @@ function Draw_Cart_Table(filtered){
         filterBtn.setAttribute("style","margin: 10px;");
         document.querySelector("#cartDiv").appendChild(filterBtn);
         
-        var searchBtn=document.createElement('button');
-        searchBtn.setAttribute("onClick",'searchClickHandler("cart")');
-        searchBtn.innerText="Search";
-        searchBtn.setAttribute("style","margin: 10px;");
-        document.querySelector("#cartDiv").appendChild(searchBtn);
 
         if (filtered){
             var restoreBtn=document.createElement('button');
@@ -623,9 +623,30 @@ function selectAll(hol){
 
 function filterClickHandler(hol){
     alert("szűrés a "+hol+"-ban");
-    document.querySelector("#defineTableLocation").value=hol;
+    var drawFilter=filterForm;
+    drawFilter.setAttribute("style","display: block;");
+
+
+    if (hol=="stock"){
+        var StockDivChildList = document.getElementById("stockDiv");  
+        
+        while (StockDivChildList.childElementCount>0){
+            StockDivChildList.removeChild(StockDivChildList.childNodes[0]);   
+        }
+
+        StockDivChildList.appendChild(drawFilter);
+    } else {
+
+        var cartDivChildList = document.getElementById("cartDiv");  
+        
+        while (cartDivChildList.childElementCount>0){
+            cartDivChildList.removeChild(cartDivChildList.childNodes[0]);   
+        }
+
+        cartDivChildList.appendChild(drawFilter);
+    }
     
-    
+    document.getElementById("defineTableLocation").value=hol;
 }
 
 function validateFilterInputs(){
