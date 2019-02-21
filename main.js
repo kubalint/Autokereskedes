@@ -658,6 +658,7 @@ function validateFilterInputs(){
     var filterLsstPrice= parseInt(document.querySelector("#filterLsstPrice").value);
     var tableLocation= document.querySelector("#defineTableLocation").value;
 
+    
 
     //++NaN értékét beállítani végtelenre vagy 0-ra++//
     if(isNaN(filterGrtHP)){filterGrtHP=0;}
