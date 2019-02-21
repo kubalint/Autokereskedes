@@ -40,6 +40,21 @@ var rendezesAllapota=
         HorsePower:"",
         Price:"",
     },
+
+    {
+        ID:"",
+        Name:"",
+        Color:"",
+        HorsePower:"",
+        Price:"",
+    },
+
+    {
+        Name:"",
+        Color:"",
+        HorsePower:"",
+        Price:"",
+    },
 ];
 
 
@@ -521,12 +536,23 @@ function sortByColumn(miAlapjan,hol){
     var rendezo=0;
 
     if (hol=="stock"){
-        var tempArray=carsOnStock;
-        rendezesAllapotaIndex=0;
+        if(filteredCarsOnStock.length>0){
+            var tempArray=filteredCarsOnStock;
+            rendezesAllapotaIndex=2;
+        } else {
+            var tempArray=carsOnStock;
+            rendezesAllapotaIndex=0;   
+        }     
     }else{
-        var tempArray=carsInCart;
-        rendezesAllapotaIndex=1;
+        if(filteredCarsInCart.length>0){
+            var tempArray=filteredCarsInCart;
+            rendezesAllapotaIndex=3;   
+        } else {
+            var tempArray=carsInCart;  
+            rendezesAllapotaIndex=1;    
+        }      
     }
+
 
     if(rendezesAllapota[rendezesAllapotaIndex][miAlapjan]=="csokkeno"){
         rendezesAllapota[rendezesAllapotaIndex][miAlapjan]="novekvo";
@@ -545,17 +571,26 @@ function sortByColumn(miAlapjan,hol){
         }
     });
 
-    if (hol=="stock"){
-        carsOnStock=tempArray;
-
-        refreshTable("stock");
-      
-    } else {
-        carsInCart=tempArray;
-
-        refreshTable("cart");
-    }
     
+    if (hol=="stock"){
+        if(filteredCarsOnStock.length>0){
+            filteredCarsOnStock=tempArray;
+            refreshTable("stock");
+
+        } else {
+            carsOnStock=tempArray;
+            refreshTable("stock");  
+
+        }     
+    }else{
+        if(filteredCarsInCart.length>0){
+            filteredCarsInCart=tempArray;
+            refreshTable("cart");    
+        } else {
+            carsInCart=tempArray;
+            refreshTable("cart"); 
+        }      
+    }
 }
 
 function selectAll(hol){
@@ -585,7 +620,7 @@ function selectAll(hol){
     }
 }
 
-//++ !!!!Filter és search feature-ök implementálása!!!! ++//
+
 function filterClickHandler(hol){
     alert("szűrés a "+hol+"-ban");
     document.querySelector("#defineTableLocation").value=hol;
@@ -613,8 +648,6 @@ function validateFilterInputs(){
         alert("A két lóerő értéktartománynak nincs közös metszete");
     } else if(filterGrtPrice>filterLsstPrice){
         alert("A két ár értéktartománynak nincs közös metszete");
-    } else if(priName>4 || priName<1 || priColor>4 || priColor<1 || priHP>4 || priHP<1 ||priPrice>4 || priPrice<1) {
-        alert("A szűrés sorrendjének 1 és 4 közötti számokat adj meg! Amelyik mezőre szűrni szeretnél, mindenképp adj meg értéket!");
     } else {
         filter(tableLocation,filterName,filterColor,filterGrtHP,filterLsstHP,filterGrtPrice,filterLsstPrice);
     }
@@ -717,27 +750,15 @@ function refreshTable(mit){
         }      
     }
 
-/*
+}
 
-    if(mit=="stock"){
-        var StockDivChildList = document.getElementById("stockDiv");  
-        
-        while (StockDivChildList.childElementCount>0){
-            StockDivChildList.removeChild(StockDivChildList.childNodes[0]);   
-        }
-
-        Draw_Stock_Table();
-
+function restoreTable(mit){
+    if (mit=="stock"){
+        filteredCarsOnStock=[];
+        refreshTable(mit);
     } else {
-        var cartDivChildList = document.getElementById("cartDiv");  
-        
-        while (cartDivChildList.childElementCount>0){
-            cartDivChildList.removeChild(cartDivChildList.childNodes[0]);   
-        }
-                           
-        Draw_Cart_Table();
-
+        filteredCarsInCart=[];
+        refreshTable(mit);
     }
-    */
-    
+
 }
