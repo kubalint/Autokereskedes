@@ -1,4 +1,3 @@
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! a táblázatok frissítése már univerzális. a szűrt táblára meg kell csinálni a rendezést
 'use strict';
 //++ Oldal betöltésének megfigyelése ++//
 window.addEventListener('load', WindowLoadHandler, false);
@@ -658,7 +657,30 @@ function validateFilterInputs(){
     var filterLsstPrice= parseInt(document.querySelector("#filterLsstPrice").value);
     var tableLocation= document.querySelector("#defineTableLocation").value;
 
+    var filterNames=[];
+
+    if(filterName!=""){
+    filterNames=filterName.split("||");   
     
+    for (var i=0 ; i<filterNames.length ; i++){
+        filterNames[i]=filterNames[i].trim();
+    }
+    }
+
+    var filterColors=[];
+
+    if(filterColor!=""){
+        filterColors=filterColor.split("||");
+
+        for (var i=0 ; i<filterColors.length ; i++){
+            filterColors[i]=filterColors[i].trim();
+        }
+    }
+
+    
+    
+
+    console.log(filterNames);
 
     //++NaN értékét beállítani végtelenre vagy 0-ra++//
     if(isNaN(filterGrtHP)){filterGrtHP=0;}
@@ -671,7 +693,7 @@ function validateFilterInputs(){
     } else if(filterGrtPrice>filterLsstPrice){
         alert("A két ár értéktartománynak nincs közös metszete");
     } else {
-        filter(tableLocation,filterName,filterColor,filterGrtHP,filterLsstHP,filterGrtPrice,filterLsstPrice);
+        filter(tableLocation,filterNames,filterColors,filterGrtHP,filterLsstHP,filterGrtPrice,filterLsstPrice);
     }
 
     
@@ -679,7 +701,7 @@ function validateFilterInputs(){
     
 }
 
-function filter(hol,filterName,filterColor,filterGrtHP,filterLsstHP,filterGrtPrice,filterLsstPrice){
+function filter(hol,filterNames,filterColors,filterGrtHP,filterLsstHP,filterGrtPrice,filterLsstPrice){
 
     if (hol=="stock"){
         if(filteredCarsOnStock.length>0){
@@ -696,6 +718,7 @@ function filter(hol,filterName,filterColor,filterGrtHP,filterLsstHP,filterGrtPri
     }
 
     var filteredArray=[];
+    
 
 
     var filteredArray = tempArray.filter(function (el) {
@@ -705,14 +728,57 @@ function filter(hol,filterName,filterColor,filterGrtHP,filterLsstHP,filterGrtPri
             el.Price < filterLsstPrice;
     });
 
-    if (filterName!=""){
-        var filteredArray=filteredArray.filter(function(arrayItem){
-            if (arrayItem["Name"].indexOf(filterName)>-1){
-                return true;
-            } else {
-                return false;
+    if (filterNames.length>0){
+        var arrayForFilterByNames = [];
+        for(var i=0; i<filterNames.length; i++){
+            for(var j=0; j<filteredArray.length; j++){
+                if(filteredArray[j]["Name"].indexOf(filterNames[i])>-1){
+                    arrayForFilterByNames.push(filteredArray[j]);   
+                }
+
             }
-        });
+
+        }
+    
+        if (arrayForFilterByNames.length>1){
+            filteredArray=arrayToDistinct(arrayForFilterByNames);
+        }else{
+            filteredArray=arrayForFilterByNames;
+        }
+
+        
+
+    }
+
+    if (filterColors.length>0){
+        var arrayForFilterByColors = [];
+        for(var i=0; i<filterColors.length; i++){
+            for(var j=0; j<filteredArray.length; j++){
+                if(filteredArray[j]["Color"].indexOf(filterColors[i])>-1){
+                    arrayForFilterByColors.push(filteredArray[j]);   
+                }
+
+            }
+
+        }
+        if (arrayForFilterByColors.length>1){
+            filteredArray=arrayToDistinct(arrayForFilterByColors);
+        }else{
+            filteredArray=arrayForFilterByColors;
+        }
+    }
+
+    
+
+/*
+    if (filterName!=""){
+                var filteredArray=filteredArray.filter(function(arrayItem){
+                if (arrayItem["Name"].indexOf(filterName)>-1){
+                    return true;
+                } else {
+                    return false;
+                }
+            });
     }
 
     if (filterColor!=""){
@@ -724,14 +790,18 @@ function filter(hol,filterName,filterColor,filterGrtHP,filterLsstHP,filterGrtPri
             }
         });
     }
+  */  
 
     console.log(filteredArray);
-    if (hol=="stock"){
-        filteredCarsOnStock=filteredArray;         
+    if(filteredArray.length>0){
+        if (hol=="stock"){
+            filteredCarsOnStock=filteredArray;         
+        }else{
+            filteredCarsInCart=filteredArray;       
+        }
     }else{
-        filteredCarsInCart=filteredArray;       
+        alert("A szűrés nem eredményezett találatot.");
     }
-
     refreshTable(hol);
 
 }
@@ -783,4 +853,16 @@ function restoreTable(mit){
         refreshTable(mit);
     }
 
+}
+
+function arrayToDistinct(inputArray){
+    for (var i=0; i<inputArray.length; i++){
+        for (var j=i+1; j<inputArray.length; j++){
+            if(inputArray[i]==inputArray[j]){
+                inputArray.splice(j,1);
+                j--;
+            }
+        }
+    }
+    return inputArray;
 }
